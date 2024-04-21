@@ -102,13 +102,12 @@ async def get_text_messages(message: types.Message):
             await message.answer("Вы отписаны")
         else:
             await message.answer("Вы уже отписаны")
-        # myScore_parse()
+        
     elif message.text.lower() == 'обновить':
         for i in users_id:
             await message.answer(i)
         await message.answer(str(len(users_id)))
-        # myScore_parse()
-        # bot.send_message(message.from_user.id, "Игры обновились")
+       
 
     elif message.text.lower() == 'количество':
         await message.answer(str(len(pre_match)) + ' - количество возможных игр')
@@ -117,7 +116,7 @@ async def get_text_messages(message: types.Message):
                 'second_team'] + ' ' + pre_match[i]['score'] + ' ' + pre_match[i]['kef_x1'] + ' ' + pre_match[i][
                            'kef_x2'] + ' ' + pre_match[i]['url']
             await message.answer(text_msg)
-            # bot.send_message(message.from_user.id, pre_match[id]['url'])
+           
     elif message.text.lower() == 'ввести прогноз':
         if message.from_user.id == 79145277:
             await Form.pprognoz.set()
@@ -146,26 +145,19 @@ async def clear_parse(message: types.Message, state: FSMContext):
 
 async def myScore_parse_live():
     myscore = 'https://www.flashscore.ru/volleyball/'
-    # # tennis = 'https://www.flashscore.ru/tennis/'
-    # site = ['https://www.flashscore.ru/volleyball/', 'https://www.flashscore.ru/tennis/']
-    # for myscore in site:
     game = 'volleyball'
     CHROMEDRIVER_PATH = os.environ.get('CHROMEDRIVER_PATH', '/usr/local/bin/chromedriver')
     GOOGLE_CHROME_BIN = os.environ.get('GOOGLE_CHROME_BIN', '/usr/bin/google-chrome')
     chrome_options = webdriver.ChromeOptions()
-    # chrome_options.binary_location = GOOGLE_CHROME_BIN
-    # chrome_options.add_argument("--headless")
+    
     chrome_options.add_argument('--disable-gpu')
     chrome_options.add_argument('--no-sandbox')
     chrome_options.headless = True
-    #
+    
     driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, options=chrome_options)
     driver.implicitly_wait(10)
     driver.get(myscore)
 
-    # driver = webdriver.Chrome("C:\Selenium\Chrome\chromedriver.exe", options=chrome_options)
-    # driver.implicitly_wait(10)
-    # driver.get(myscore)
 
     elements = driver.find_elements_by_css_selector("div.tabs__tab")
     await asyncio.sleep(5)
@@ -179,7 +171,7 @@ async def myScore_parse_live():
     except:
         driver.close()
     driver.quit()
-    # get_bet()
+   
 
 
 async def tennis_game():
@@ -188,20 +180,14 @@ async def tennis_game():
 
     CHROMEDRIVER_PATH = os.environ.get('CHROMEDRIVER_PATH', '/usr/local/bin/chromedriver')
     GOOGLE_CHROME_BIN = os.environ.get('GOOGLE_CHROME_BIN', '/usr/bin/google-chrome')
-    chrome_options = webdriver.ChromeOptions()
-    # chrome_options.binary_location = GOOGLE_CHROME_BIN
-    # chrome_options.add_argument("--headless")
+    chrome_options = webdriver.ChromeOptions()    
     chrome_options.add_argument('--disable-gpu')
     chrome_options.add_argument('--no-sandbox')
     chrome_options.headless = True
-    #
+   
     driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, options=chrome_options)
     driver.implicitly_wait(10)
-    driver.get(tennis)
-
-    # driver = webdriver.Chrome("C:\Selenium\Chrome\chromedriver.exe", options=chrome_options)
-    # driver.implicitly_wait(10)
-    # driver.get(tennis)
+    driver.get(tennis)   
 
     elements = driver.find_elements_by_css_selector("div.tabs__tab")
     await asyncio.sleep(5)
@@ -220,7 +206,7 @@ async def tennis_game():
 async def track_match(container, game):
     soup = BeautifulSoup(container, 'html.parser')
     matches = soup.select(".event__match.event__match--scheduled.event__match--oneLine")
-    # pre_match = {}
+    
     for match in matches:
         time_match = match.select_one('div.event__time')
         p1 = match.select_one('div.event__participant--home')
@@ -230,10 +216,9 @@ async def track_match(container, game):
         x2 = match.select_one('div.event__odd--odd2')
         id_match = match["id"].split("_")[-1]
         url = 'https://www.flashscore.ru/match/{}/#match-summary'.format(id_match)
-        # print(time_match.text, p1.text, p2.text, score.text, x1.text, x2.text, url)
+       
         text_msg = time_match.text + ' ' + p1.text + ' ' + p2.text + ' ' + score.text + ' ' + x1.text + ' ' + x2.text + ' ' + url
-        # for id in users_id:
-        #     bot.send_message(id, text_msg)
+       
         if time_match.text.find('TKP') == -1:
             if (x1.text != None or x2.text != None) and (x1.text != '-' and x2.text != '-'):
                 kef_one = float(x1.text)
@@ -247,17 +232,12 @@ async def track_match(container, game):
                         if not (1.1 <= kef_one <= 1.4 and 1.1 <= float(pre_match[id_match]['kef_x1']) <= 1.4) and not (
                                 1.1 <= kef_two <= 1.4 and 1.1 <= float(pre_match[id_match]['kef_x2']) <= 1.4):
                             pre_match[id_match]['dogovor'] = True
-                        # for id in users_id:
-                        #     bot.send_message(id, text_msg)
-                        #     bot.send_message(id, 'Возможная игра')
+                       
                 if id_match in pre_match:
                     if not (1.1 <= kef_one <= 1.4 and 1.1 <= float(pre_match[id_match]['kef_x1']) <= 1.4) and not (
                             1.1 <= kef_two <= 1.4 and 1.1 <= float(pre_match[id_match]['kef_x2']) <= 1.4):
                         pre_match[id_match]['dogovor'] = True
-        # for id in users_id:
-        #     bot.send_message(id, len(pre_match))
-    # print("=======Игры========")
-    # print(pre_match)
+       
 
 
 async def live_match(container, game):
@@ -271,9 +251,7 @@ async def live_match(container, game):
         x1 = match.select_one('div.event__odd--odd1')
         x2 = match.select_one('div.event__odd--odd2')
         id_match = match["id"].split("_")[-1]
-        url = 'https://www.flashscore.ru/match/{}/#match-summary'.format(id_match)
-        # print(time_match.text, p1.text, p2.text, score.text, x1.text, x2.text, url)
-        # text_msg = time_match.text + ' ' + p1.text + ' ' + p2.text + ' ' + score.text + ' ' + x1.text + ' ' + x2.text + ' ' + url
+        url = 'https://www.flashscore.ru/match/{}/#match-summary'.format(id_match)       
         text_msg = time_match.text + '\n' + p1.text + ' - ' + x1.text + '\n' + p2.text + ' - ' + x2.text + '\n' + score.text + '\n' + url
 
         if id_match in pre_match:
@@ -291,14 +269,9 @@ async def live_match(container, game):
                         uved_user.append(id_match)
 
             if not id_match in live_game:
-                if id_match in uved_user:
-                    # live_game[id_match] = {'time': time_match.text, 'first_team': p1.text, 'second_team': p2.text, 'score': score.text, 'kef_x1': x1.text, 'kef_x2': x2.text, 'url': url}
+                if id_match in uved_user:                    
                     if 1.1 <= float(pre_match[id_match]['kef_x1']) <= 1.4:
-                        if score.text == '0 - 1':
-                            # for id_us in users_id:
-                            #     text_msg = text_msg +'\n' + p1.text + ' выиграет 2-й сет, ставить когда будет ввести разницей в 2 очка'
-                            #     bot.send_message(id_us, text_msg)
-                            # bot.send_message(id_us, p1.text + ' выиграет 2-й сет, ставить когда будет ввести разницей в 2 очка')
+                        if score.text == '0 - 1':                           
                             live_game[id_match] = {'time': time_match.text, 'first_team': p1.text,
                                                    'second_team': p2.text,
                                                    'score': score.text, 'kef_x1': x1.text, 'kef_x2': x2.text,
@@ -312,11 +285,7 @@ async def live_match(container, game):
                                     text_msg = text_msg + '\n' + p1.text + ' выиграет 2-й сет'
                                     await bot.send_message(id_us, text_msg)
                     if 1.1 <= float(pre_match[id_match]['kef_x2']) <= 1.4:
-                        if score.text == '1 - 0':
-                            # for id_us in users_id:
-                            #     text_msg = text_msg + '\n' + p2.text + ' выиграет 2-й сет, ставить когда будет ввести разницей в 2 очка'
-                            #     bot.send_message(id_us, text_msg)
-                            # bot.send_message(id_us, p2.text + ' выиграет 2-й сет, ставить когда будет ввести разницей в 2 очка')
+                        if score.text == '1 - 0':                           
                             live_game[id_match] = {'time': time_match.text, 'first_team': p1.text,
                                                    'second_team': p2.text,
                                                    'score': score.text, 'kef_x1': x1.text, 'kef_x2': x2.text,
@@ -339,14 +308,12 @@ async def run_myscore():
 
 
 async def run_live_score():
-    while True:
-        # myScore_parse()
-        print('Hello')
+    while True:        
         await myScore_parse_live()
         await asyncio.sleep(5)
         await tennis_game()
         await asyncio.sleep(5)
-        print('end')
+        
 
 
 async def on_startup(app):
