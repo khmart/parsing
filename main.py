@@ -22,7 +22,7 @@ import datetime
 from urllib.parse import urljoin
 from flask import Flask, request
 
-BOT_TOKEN = '191757016:AAG-XmJClIRQaY7vnlN0woWq1uHzo9f-pAw'
+BOT_TOKEN = 'token'
 HEROKU_APP_NAME = os.getenv('aiomybot')
 
 TOKEN = BOT_TOKEN  # Press "Reveal Config Vars" in settings tab on Heroku and set TOKEN variable
